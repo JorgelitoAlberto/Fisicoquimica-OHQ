@@ -1,0 +1,1403 @@
+%% =====================================================================
+%%  FÍSICOQUÍMICA OLÍMPICA
+%%  Preparación para el área de Fisicoquímica de la Olimpiada
+%%  Hondureña de Química (OHQ)
+%%
+%%  Autor: Jorge Alberto Banegas Beltrand
+%%  Compilar con: xelatex (requiere 2 pasadas para el índice)
+%%      xelatex main.tex && xelatex main.tex
+%%
+%%  Este archivo es un único documento .tex autocontenido: incluye el
+%%  preámbulo, la portada, el prólogo, los 6 capítulos y la bibliografía,
+%%  todo en un solo lugar para facilitar su publicación en GitHub.
+%% =====================================================================
+
+\documentclass[11pt,twoside,openany]{book}
+
+% ======================================================================
+% PREÁMBULO
+% ======================================================================
+
+% ============================================================
+% PREÁMBULO — Físicoquímica Olímpica
+% ============================================================
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{spanish}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\usepackage[a4paper,margin=2.3cm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,decorations.pathreplacing,shapes.geometric,backgrounds,patterns}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{skins,breakable,theorems}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage[version=4]{mhchem}
+\usepackage{hyperref}
+\usepackage{needspace}
+\usepackage{lettrine}
+\usepackage{ragged2e}
+
+% ---------- Paleta de color: azul profundo / dorado olímpico / verde químico ----------
+\definecolor{fqAzul}{HTML}{0B3D66}
+\definecolor{fqAzulClaro}{HTML}{E8F1F8}
+\definecolor{fqDorado}{HTML}{C8952B}
+\definecolor{fqVerde}{HTML}{1E7145}
+\definecolor{fqVerdeClaro}{HTML}{E7F3EC}
+\definecolor{fqRojo}{HTML}{9B2226}
+\definecolor{fqRojoClaro}{HTML}{FBEAEA}
+\definecolor{fqNaranja}{HTML}{B5560B}
+\definecolor{fqNaranjaClaro}{HTML}{FCEEE1}
+\definecolor{fqGris}{HTML}{4A4A4A}
+\definecolor{fqFondo}{HTML}{FAF9F6}
+
+% ---------- Redefinir frontmatter/mainmatter para respetar openany ----------
+% (por defecto, book.cls fuerza \cleardoublepage sin importar la opción openany,
+%  lo que deja páginas en blanco de más; aquí se usa \clearpage en su lugar)
+\makeatletter
+\renewcommand\frontmatter{%
+  \clearpage
+  \@mainmatterfalse
+  \pagenumbering{roman}}
+\renewcommand\mainmatter{%
+  \clearpage
+  \@mainmattertrue
+  \pagenumbering{arabic}}
+\renewcommand\backmatter{%
+  \clearpage
+  \@mainmatterfalse}
+\makeatother
+\hypersetup{
+    colorlinks=true,
+    linkcolor=fqAzul,
+    citecolor=fqVerde,
+    urlcolor=fqDorado,
+    pdftitle={Físicoquímica Olímpica},
+    pdfauthor={Jorge Alberto Banegas Beltrand},
+    pdfsubject={Preparación para la Olimpiada Hondureña de Química (OHQ) - Área de Fisicoquímica}
+}
+
+% ---------- Encabezados ----------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.6pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[LE,RO]{\small\bfseries\thepage}
+\fancyhead[RE]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[LO]{\small\itshape\nouppercase{\rightmark}}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\small\thepage}}
+
+% ---------- Estilo de capítulos y secciones ----------
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{fqAzul}}
+  {\filright\Large\textcolor{fqDorado}{\chaptertitlename}~\thechapter}
+  {6pt}
+  {\titlerule[1.2pt]\vspace{8pt}\Huge}
+  [\vspace{4pt}\rule{\linewidth}{0.6pt}]
+\titlespacing*{\chapter}{0pt}{10pt}{28pt}
+
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{fqAzul}}{\thesection}{10pt}{}
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{fqVerde}}{\thesubsection}{8pt}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{fqNaranja}}{\thesubsubsection}{6pt}{}
+
+% ---------- Tabla de contenidos ----------
+\renewcommand{\cftchapfont}{\bfseries\color{fqAzul}}
+\renewcommand{\cftchappagefont}{\bfseries\color{fqAzul}}
+\renewcommand{\cftsecfont}{\color{fqGris}}
+\setlength{\cftbeforechapskip}{10pt}
+
+% ============================================================
+%  CAJAS TEMÁTICAS (tcolorbox)
+% ============================================================
+
+% --- Concepto clave / teoría ---
+\newtcolorbox{concepto}[1][]{
+  enhanced, breakable, colback=fqAzulClaro, colframe=fqAzul,
+  boxrule=0.9pt, arc=2mm, left=2mm, right=2mm, top=2mm, bottom=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=fqAzul,
+  title={CONCEPTO CLAVE #1},
+  attach boxed title to top left={xshift=3mm,yshift=-3mm},
+  boxed title style={boxrule=0pt,arc=1mm,colback=fqAzul},
+}
+
+% --- Fórmula destacada ---
+\newtcolorbox{formula}[1][]{
+  enhanced, breakable, colback=white, colframe=fqDorado, colbacktitle=white,
+  boxrule=1.1pt, arc=1.5mm, left=3mm, right=3mm, top=2mm, bottom=2mm,
+  fonttitle=\bfseries, coltitle=fqDorado,
+  title={#1},
+  halign=center,
+  toptitle=1mm, bottomtitle=1mm,
+}
+
+% --- Problema resuelto ---
+\newtcolorbox{resuelto}[1][]{
+  enhanced, breakable, colback=fqVerdeClaro, colframe=fqVerde,
+  boxrule=0.9pt, arc=2mm, left=2mm, right=2mm, top=2mm, bottom=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=fqVerde,
+  title={PROBLEMA RESUELTO #1},
+  attach boxed title to top left={xshift=3mm,yshift=-3mm},
+  boxed title style={boxrule=0pt,arc=1mm,colback=fqVerde},
+}
+
+% --- Problema propuesto ---
+\newtcolorbox{propuesto}[1][]{
+  enhanced, breakable, colback=fqNaranjaClaro, colframe=fqNaranja,
+  boxrule=0.9pt, arc=2mm, left=2mm, right=2mm, top=2mm, bottom=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=fqNaranja,
+  title={PARA RESOLVER #1},
+  attach boxed title to top left={xshift=3mm,yshift=-3mm},
+  boxed title style={boxrule=0pt,arc=1mm,colback=fqNaranja},
+}
+
+% --- Tip olímpico ---
+\newtcolorbox{tip}[1][]{
+  enhanced, breakable, colback=white, colframe=fqDorado, colbacktitle=white,
+  boxrule=0.8pt, arc=1.5mm, left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+  fonttitle=\bfseries, coltitle=fqDorado,
+  title={TIP OLÍMPICO #1},
+  toptitle=1mm, bottomtitle=1mm,
+}
+
+% --- Error común ---
+\newtcolorbox{error}[1][]{
+  enhanced, breakable, colback=fqRojoClaro, colframe=fqRojo, colbacktitle=fqRojoClaro,
+  boxrule=0.8pt, arc=1.5mm, left=2mm, right=2mm, top=1.5mm, bottom=1.5mm,
+  fonttitle=\bfseries, coltitle=fqRojo,
+  title={ERROR COMÚN #1},
+  toptitle=1mm, bottomtitle=1mm,
+}
+
+% --- Resumen de capítulo ---
+\newtcolorbox{resumen}[1][]{
+  enhanced, breakable, colback=fqFondo, colframe=fqAzul,
+  boxrule=1pt, arc=2mm, left=3mm, right=3mm, top=2mm, bottom=2mm,
+  fonttitle=\bfseries\color{white}, coltitle=white,
+  colbacktitle=fqAzul,
+  title={RESUMEN DEL CAPÍTULO #1},
+}
+
+% ---------- Listas ----------
+\setlist[itemize]{label=\textcolor{fqAzul}{\small\textbullet}}
+
+% ---------- Comando de solución paso a paso ----------
+\newcommand{\paso}[1]{\medskip\noindent\textbf{\textcolor{fqAzul}{$\Rightarrow$ #1}}\par\smallskip}
+\newcommand{\idea}[1]{\textbf{\textcolor{fqVerde}{Idea principal:}} #1\par}
+\newcommand{\aplicacion}[1]{\textbf{\textcolor{fqNaranja}{Aplicación olímpica:}} #1\par}
+
+% ---------- Título de sección de práctica ----------
+\newcommand{\seccionpractica}{%
+  \bigskip\noindent{\Large\bfseries\color{fqNaranja}Problemas para practicar}\par
+  \vspace{2mm}\noindent\textcolor{fqNaranja}{\rule{\linewidth}{0.8pt}}\par\medskip
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\begin{document}
+
+% ======================================================================
+% PORTADA
+% ======================================================================
+
+\begin{titlepage}
+\newgeometry{margin=0cm}
+\begin{tikzpicture}[remember picture, overlay]
+    % Fondo general: azul marino en toda la página
+    \fill[fqAzul] (current page.south west) rectangle (current page.north east);
+
+    % Panel claro inferior (franja de autor), altura 6.2cm desde el borde inferior
+    \fill[fqAzulClaro] (current page.south west) rectangle ([yshift=6.2cm]current page.south east);
+    \fill[fqDorado] ([yshift=6.2cm]current page.south west) rectangle ([yshift=6.32cm]current page.south east);
+
+    % Franja dorada superior (a 2.6cm del borde superior)
+    \fill[fqDorado] ([yshift=-2.6cm]current page.north west) rectangle ([yshift=-2.72cm]current page.north east);
+
+    % Anillos olímpicos estilizados, en la zona azul, arriba del panel claro
+    \begin{scope}[shift={($(current page.south)+(0,10.3cm)$)}]
+        \foreach \x/\c in {-4.6/fqDorado,-2.3/white,0/fqDorado,2.3/white,4.6/fqDorado}{
+            \draw[\c, line width=2.6pt] (\x,0) circle (0.85cm);
+        }
+    \end{scope}
+
+    % Íconos moleculares decorativos (esquina superior)
+    \begin{scope}[shift={($(current page.north west)+(2.3,-4.3)$)}, scale=0.9, white]
+        \draw[line width=1.3pt] (0,0) -- (1.2,0.7) -- (2.4,0);
+        \filldraw (0,0) circle (0.14);
+        \filldraw (1.2,0.7) circle (0.18);
+        \filldraw (2.4,0) circle (0.14);
+    \end{scope}
+    \begin{scope}[shift={($(current page.north east)+(-3.0,-4.6)$)}, scale=0.9, fqDorado]
+        \draw[line width=1.3pt] (0,0) -- (-1.1,-0.8);
+        \draw[line width=1.3pt] (0,0) -- (1.1,-0.6);
+        \filldraw (0,0) circle (0.16);
+        \filldraw (-1.1,-0.8) circle (0.12);
+        \filldraw (1.1,-0.6) circle (0.12);
+    \end{scope}
+
+    % Textos superiores (sobre fondo azul)
+    \node[align=center, text width=15cm] at ([yshift=-4.6cm]current page.north) {
+        {\color{fqDorado}\Large\bfseries\sffamily PREPARACIÓN OLÍMPICA \ \textbullet\ \ ÁREA DE FISICOQUÍMICA}
+    };
+
+    \node[align=center, text width=16cm] at ([yshift=-7.6cm]current page.north) {
+        {\color{white}\fontsize{52}{58}\selectfont\bfseries\sffamily Físicoquímica}\\[4pt]
+        {\color{fqDorado}\fontsize{52}{58}\selectfont\bfseries\sffamily Olímpica}
+    };
+
+    \node[align=center, text width=14cm] at ([yshift=-11.9cm]current page.north) {
+        {\color{white}\large\itshape Teoría, práctica y estrategia para la\\ Olimpiada Hondureña de Química (OHQ)}
+    };
+
+    % Bloque de autor, dentro del panel claro inferior
+    \node[align=center, text width=13cm] at ([yshift=3.3cm]current page.south) {
+        {\color{fqAzul}\Large\bfseries Jorge Alberto Banegas Beltrand}\\[6pt]
+        {\color{fqGris}\normalsize Medallista en Olimpiadas de Matemáticas, Química,}\\[1pt]
+        {\color{fqGris}\normalsize Física y Astrofísica}\\[2pt]
+        {\color{fqGris}\normalsize Comayagua, Comayagua, Honduras}
+    };
+
+    \node[align=center] at ([yshift=0.7cm]current page.south) {
+        {\color{fqGris}\small \the\year}
+    };
+\end{tikzpicture}
+\end{titlepage}
+\restoregeometry
+\clearpage
+\thispagestyle{empty}
+\vspace*{3cm}
+{\small
+\textbf{Físicoquímica Olímpica}\par
+\medskip
+Primera edición, \the\year.\par
+\medskip
+Redactado por \textbf{Jorge Alberto Banegas Beltrand}, medallista en Olimpiadas de Matemáticas, Química, Física y Astrofísica, Comayagua, Comayagua, Honduras.\par
+\medskip
+Material elaborado con fines educativos para la preparación de estudiantes hondureños en el área de fisicoquímica de la Olimpiada Hondureña de Química (OHQ). Se autoriza su reproducción parcial o total con fines estrictamente académicos y sin fines de lucro, citando la fuente.\par
+\medskip
+Las figuras, diagramas y esquemas de este documento fueron elaborados por el autor para fines didácticos.
+}
+\clearpage
+
+\frontmatter
+\tableofcontents
+\clearpage
+
+% ======================================================================
+% PRÓLOGO — CÓMO USAR ESTE LIBRO
+% ======================================================================
+
+\chapter*{Cómo usar este libro}
+\addcontentsline{toc}{chapter}{Cómo usar este libro}
+
+\renewcommand{\LettrineFontHook}{\color{fqAzul}}
+\lettrine[lines=3]{L}{a} fisicoquímica suele ser el área que más respeto (y más dolores de cabeza) genera entre los competidores de las olimpiadas de química. No es química pura, tampoco es física pura: es el puente entre ambas, y por eso exige un tipo de razonamiento distinto. Este libro nace de esa experiencia como competidor y busca ahorrarte el tiempo que yo perdí tratando de aprender fisicoquímica en libros universitarios de 800 páginas que no fueron escritos pensando en un examen de tres horas ni en preguntas de opción múltiple con trampa.
+
+Aquí encontrarás los seis bloques temáticos del área de fisicoquímica de la Olimpiada Hondureña de Química (OHQ), organizados de manera progresiva: primero el comportamiento de los gases ideales, después la termoquímica, luego el ajuste hacia el mundo real con los gases reales, las propiedades coligativas, la electroquímica de Faraday, y finalmente la cinética química. Cada capítulo puede estudiarse de forma independiente, pero el orden propuesto está pensado para que las ideas de un capítulo sostengan al siguiente.
+
+\section*{Cómo está organizado cada capítulo}
+
+\begin{itemize}
+    \item \textbf{\textcolor{fqAzul}{Concepto clave}} — la teoría mínima indispensable, sin relleno, explicada con palabras simples antes de mostrar la fórmula.
+    \item \textbf{\textcolor{fqDorado}{Fórmula}} — la ecuación central de cada tema, aislada para que la memorices con su significado, no solo con símbolos.
+    \item \textbf{\textcolor{fqDorado}{Tip olímpico}} — atajos, formas de verificar tu respuesta, y trucos que uso yo mismo en examen.
+    \item \textbf{\textcolor{fqRojo}{Error común}} — los errores que veo repetirse examen tras examen, para que tú no los cometas.
+    \item \textbf{\textcolor{fqVerde}{Problema resuelto}} — ejercicios resueltos paso a paso, explicando \emph{la idea principal} detrás de la solución y \emph{la aplicación olímpica} del concepto, no solo el álgebra.
+    \item \textbf{\textcolor{fqNaranja}{Para resolver}} — problemas propuestos con respuesta al final, para que practiques antes de revisar la solución.
+    \item \textbf{Resumen del capítulo} — una síntesis de una página para repasar la noche antes del examen.
+\end{itemize}
+
+\section*{Cómo estudiar con este libro}
+
+\begin{tip}[]
+No leas este libro como una novela. Léelo con lápiz y papel al lado: deduce las unidades de cada constante, dibuja tú mismo las gráficas antes de ver la solución, y resuelve cada problema propuesto \emph{antes} de mirar la respuesta. La fisicoquímica olímpica se aprende resolviendo, no memorizando.
+\end{tip}
+
+Un consejo final, de olímpico a olímpico: no le temas a las unidades. Más de la mitad de los errores en fisicoquímica no son conceptuales, son de conversión de unidades y de despejar mal una constante. Cada vez que te encuentres un problema, antes de tocar una fórmula, pregúntate: \emph{¿qué me están dando, en qué unidades, y qué me están pidiendo?}
+
+\bigskip
+\hfill \textit{— Jorge Alberto Banegas Beltrand}
+
+\mainmatter
+
+% ======================================================================
+% CAPÍTULO 1 — LEY DEL GAS IDEAL
+% ======================================================================
+
+\chapter{Ley del gas ideal}
+\label{cap:gasideal}
+
+\section{El modelo de gas ideal}
+
+\begin{concepto}[]
+Un \textbf{gas ideal} es un modelo teórico en el que se asume que las partículas del gas:
+\begin{itemize}
+    \item No tienen volumen propio (son puntuales comparadas con el volumen del recipiente).
+    \item No ejercen fuerzas de atracción ni repulsión entre sí, salvo en choques.
+    \item Chocan entre sí y con las paredes del recipiente de forma \textbf{perfectamente elástica} (no pierden energía cinética).
+    \item Su energía cinética promedio depende únicamente de la temperatura absoluta.
+\end{itemize}
+Ningún gas real cumple esto exactamente, pero a \textbf{baja presión} y \textbf{alta temperatura} (lejos del punto de condensación), la mayoría de los gases reales se comportan de forma muy cercana a un gas ideal. Este modelo es el punto de partida de toda la fisicoquímica olímpica, y en el Capítulo~\ref{cap:reales} veremos exactamente cuándo y por qué falla.
+\end{concepto}
+
+\section{Las leyes empíricas de los gases}
+
+Antes de que existiera la ecuación general, distintos científicos encontraron relaciones \emph{parciales} entre las variables de un gas (presión $P$, volumen $V$, temperatura $T$ y cantidad de sustancia $n$), manteniendo las demás constantes. Estas leyes son casos particulares de la ley general y son muy usadas en problemas olímpicos donde \textbf{una variable no cambia}.
+
+\subsection{Ley de Boyle-Mariotte (proceso isotérmico)}
+
+\begin{concepto}[: Ley de Boyle]
+A \textbf{temperatura constante} y cantidad de gas constante, el volumen de un gas es \textbf{inversamente proporcional} a la presión. Si comprimes un gas, su presión sube; si lo expandes, su presión baja.
+\end{concepto}
+
+\begin{formula}[Ley de Boyle]
+$$P_1 V_1 = P_2 V_2 \qquad (T,\, n \text{ constantes})$$
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=7.2cm, height=5.2cm,
+    xlabel={$V$ (volumen)}, ylabel={$P$ (presión)},
+    axis lines=left, xmin=0, xmax=5, ymin=0, ymax=5,
+    xtick=\empty, ytick=\empty,
+    title={\small Isoterma de Boyle ($PV=$ cte)},
+]
+\addplot[fqAzul, thick, domain=0.5:5, samples=60] {2.2/x};
+\node[fqAzul] at (axis cs:3.6,1.0) {\small $T$ constante};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{resuelto}[]
+Un gas ocupa $\SI{4.0}{L}$ a $\SI{1.5}{atm}$. Si se comprime isotérmicamente hasta $\SI{2.5}{L}$, ¿cuál es la nueva presión?
+
+\paso{Identificar el proceso}
+La temperatura y la cantidad de gas no cambian $\Rightarrow$ aplica la Ley de Boyle.
+
+\paso{Plantear y despejar}
+$$P_1V_1 = P_2V_2 \ \Rightarrow\ P_2 = \frac{P_1V_1}{V_2} = \frac{(1.5\ \text{atm})(4.0\ \text{L})}{2.5\ \text{L}} = \SI{2.4}{atm}$$
+
+\idea{El producto $PV$ es constante mientras $T$ y $n$ no cambien; comprimir el volumen a menos de la mitad no duplica la presión porque $2.5\,\text{L}$ no es la mitad de $4.0\,\text{L}$.}
+\aplicacion{En examen, la Ley de Boyle casi siempre aparece disfrazada como "un pistón comprime un gas" o "un buzo sube a la superficie" (la presión del agua disminuye y el volumen del aire en los pulmones aumenta).}
+\end{resuelto}
+
+\subsection{Ley de Charles (proceso isobárico)}
+
+\begin{concepto}[: Ley de Charles]
+A \textbf{presión constante}, el volumen de un gas es \textbf{directamente proporcional} a su temperatura \emph{absoluta} (en Kelvin, nunca en °C).
+\end{concepto}
+
+\begin{formula}[Ley de Charles]
+$$\frac{V_1}{T_1} = \frac{V_2}{T_2} \qquad (P,\, n \text{ constantes})$$
+\end{formula}
+
+\begin{error}[]
+Usar la temperatura en °C directamente en la fórmula. Como la relación es de \textbf{proporcionalidad directa}, si $T_1$ o $T_2$ están en Celsius, el resultado será incorrecto. \textbf{Siempre convierte a Kelvin}: $T(\text{K}) = T(^\circ\text{C}) + 273.15$.
+\end{error}
+
+\subsection{Ley de Gay-Lussac (proceso isocórico)}
+
+\begin{concepto}[: Ley de Gay-Lussac]
+A \textbf{volumen constante}, la presión de un gas es \textbf{directamente proporcional} a su temperatura absoluta. Es el principio detrás de por qué una lata de aerosol puede explotar si se calienta.
+\end{concepto}
+
+\begin{formula}[Ley de Gay-Lussac]
+$$\frac{P_1}{T_1} = \frac{P_2}{T_2} \qquad (V,\, n \text{ constantes})$$
+\end{formula}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=6.6cm, height=4.6cm,
+    xlabel={$T$ (K)}, ylabel={$V$},
+    axis lines=left, xmin=0, xmax=5, ymin=0, ymax=5,
+    xtick=\empty, ytick=\empty,
+    title={\small Charles ($P$ cte)},
+]
+\addplot[fqVerde, thick, domain=0:4.5] {x};
+\end{axis}
+\end{tikzpicture}
+\hspace{0.6cm}
+\begin{tikzpicture}
+\begin{axis}[
+    width=6.6cm, height=4.6cm,
+    xlabel={$T$ (K)}, ylabel={$P$},
+    axis lines=left, xmin=0, xmax=5, ymin=0, ymax=5,
+    xtick=\empty, ytick=\empty,
+    title={\small Gay-Lussac ($V$ cte)},
+]
+\addplot[fqNaranja, thick, domain=0:4.5] {0.85*x};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Ley de Avogadro}
+
+\begin{concepto}[: Ley de Avogadro]
+A \textbf{presión y temperatura constantes}, el volumen de un gas es \textbf{directamente proporcional} al número de moles. Volúmenes iguales de gases distintos, a las mismas condiciones de $P$ y $T$, contienen el \textbf{mismo número de moléculas}, sin importar de qué gas se trate.
+\end{concepto}
+
+\begin{formula}[Ley de Avogadro]
+$$\frac{V_1}{n_1} = \frac{V_2}{n_2} \qquad (P,\, T \text{ constantes})$$
+\end{formula}
+
+\begin{tip}[]
+De la Ley de Avogadro se deriva un dato que debes memorizar de memoria para la olimpiada: \textbf{1 mol de cualquier gas ideal ocupa $\SI{22.4}{L}$ a condiciones normales (TPN: $\SI{0}{\celsius}$, $\SI{1}{atm}$)} y $\SI{24.45}{L}$ aproximadamente a $\SI{25}{\celsius}$ y $\SI{1}{atm}$ (condiciones estándar de laboratorio, TPE). Muchos problemas te dan el volumen molar directamente para ahorrarte el cálculo con $R$.
+\end{tip}
+
+\section{Ley de los gases ideales}
+
+\begin{concepto}[]
+Las cuatro leyes anteriores son casos particulares de una sola ecuación que relaciona las cuatro variables de estado de un gas al mismo tiempo: presión, volumen, cantidad de sustancia y temperatura.
+\end{concepto}
+
+\begin{formula}[Ecuación de estado del gas ideal]
+$$PV = nRT$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{cll}
+\toprule
+\textbf{Variable} & \textbf{Significado} & \textbf{Unidades usuales} \\
+\midrule
+$P$ & Presión & atm, kPa, mmHg, torr \\
+$V$ & Volumen & L, m$^3$ \\
+$n$ & Cantidad de sustancia & mol \\
+$R$ & Constante universal de los gases & \\
+$T$ & Temperatura absoluta & K (¡nunca °C!) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{La constante de los gases ideales}
+
+\begin{concepto}[]
+$R$ es una constante de proporcionalidad universal: su \textbf{valor numérico cambia según las unidades de $P$ y $V$} que estés usando, pero representa siempre la misma cantidad física. En un examen olímpico debes reconocer cuál versión de $R$ usar según los datos.
+\end{concepto}
+
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+\textbf{Unidades} & \textbf{Valor de $R$} \\
+\midrule
+atm, L, mol, K & $\SI{0.08206}{L.atm.mol^{-1}.K^{-1}}$ \\
+J, mol, K (SI) & $\SI{8.314}{J.mol^{-1}.K^{-1}}$ \\
+kPa, L, mol, K & $\SI{8.314}{kPa.L.mol^{-1}.K^{-1}}$ \\
+cal, mol, K & $\SI{1.987}{cal.mol^{-1}.K^{-1}}$ \\
+mmHg, L, mol, K & $\SI{62.36}{mmHg.L.mol^{-1}.K^{-1}}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tip}[]
+Antes de sustituir en $PV=nRT$, mira las unidades de $P$ y $V$ que te dieron y elige el $R$ que "cancele" esas unidades. Es el error más común y más evitable del área.
+\end{tip}
+
+\subsection{Densidad y masa molar a partir de la ecuación de gas ideal}
+
+Como $n = \dfrac{m}{M}$ (masa entre masa molar), la ecuación de gas ideal se puede reescribir para encontrar la masa molar o la densidad de un gas desconocido, algo muy común en problemas de identificación de compuestos:
+
+\begin{formula}[Formas útiles derivadas]
+$$PM = \frac{m}{V}RT = \rho R T \qquad \Longrightarrow \qquad M = \frac{\rho R T}{P}$$
+\end{formula}
+
+\begin{resuelto}[]
+Un gas desconocido tiene una densidad de $\SI{1.964}{g/L}$ a $\SI{1.00}{atm}$ y $\SI{25}{\celsius}$. ¿Cuál es su masa molar? ¿Podría tratarse de \ce{CO2}?
+
+\paso{Convertir temperatura}
+$T = 25 + 273.15 = \SI{298.15}{K}$
+
+\paso{Elegir el valor de $R$ adecuado}
+Como $P$ está en atm y la densidad en g/L, usamos $R = \SI{0.08206}{L.atm.mol^{-1}.K^{-1}}$.
+
+\paso{Sustituir en $M = \dfrac{\rho R T}{P}$}
+$$M = \frac{(1.964\ \text{g/L})(0.08206\ \text{L.atm.mol}^{-1}\text{K}^{-1})(298.15\ \text{K})}{1.00\ \text{atm}} \approx \SI{48.0}{g/mol}$$
+
+\paso{Interpretar}
+La masa molar de \ce{CO2} es $44.01\ \text{g/mol}$, no $48.0\ \text{g/mol}$, así que \textbf{no es \ce{CO2}}. El valor obtenido es muy cercano al del \ce{O3} (ozono, $M = 48.00\ \text{g/mol}$).
+
+\idea{La relación $PM=\rho RT$ convierte una medición macroscópica (densidad) en información sobre la identidad de las partículas del gas — es el mismo principio que usó Cannizzaro para ordenar las primeras tablas de masas atómicas.}
+\aplicacion{Este tipo de problema aparece en la OHQ como "identificación de gas desconocido" y suele combinarse con estequiometría para pedir la fórmula molecular completa.}
+\end{resuelto}
+
+\begin{resuelto}[]
+¿Qué volumen ocupan $\SI{16.0}{g}$ de \ce{O2} (g) a $\SI{2.00}{atm}$ y $\SI{300}{K}$?
+
+\paso{Convertir masa a moles}
+$$n = \frac{16.0\ \text{g}}{32.00\ \text{g/mol}} = 0.500\ \text{mol}$$
+
+\paso{Despejar $V$ de $PV=nRT$}
+$$V = \frac{nRT}{P} = \frac{(0.500\ \text{mol})(0.08206\ \text{L.atm.mol}^{-1}\text{K}^{-1})(300\ \text{K})}{2.00\ \text{atm}} \approx \SI{6.15}{L}$$
+
+\idea{Cada vez que el problema te da masa en gramos, el primer paso casi siempre es convertirla a moles usando la masa molar — es la puerta de entrada a cualquier ecuación de gas ideal.}
+\end{resuelto}
+
+\begin{error}[]
+Olvidar que $n$ en $PV=nRT$ es la cantidad total de moles de \textbf{partículas de gas}, no de "moléculas originales". Si un compuesto se disocia o reacciona generando más moles gaseosos, debes usar el número final de moles de gas, no el inicial.
+\end{error}
+
+\seccionpractica
+
+\begin{propuesto}[]
+Un recipiente rígido de $\SI{10.0}{L}$ contiene un gas ideal a $\SI{25}{\celsius}$ y $\SI{3.00}{atm}$. Si la temperatura sube a $\SI{150}{\celsius}$ sin que el volumen cambie, ¿cuál es la nueva presión?
+
+\textit{Respuesta: $\approx \SI{4.26}{atm}$ (Ley de Gay-Lussac).}
+\end{propuesto}
+
+\begin{propuesto}[]
+¿Cuántos moles de gas hay en un balón de $\SI{5.00}{L}$ a $\SI{740}{mmHg}$ y $\SI{22}{\celsius}$?
+
+\textit{Respuesta: $\approx 0.198\ \text{mol}$ (usa $R = 62.36\ \text{mmHg·L·mol}^{-1}\text{K}^{-1}$).}
+\end{propuesto}
+
+\begin{propuesto}[]
+Un gas ideal ocupa $\SI{3.20}{L}$ a $\SI{1.10}{atm}$ y $\SI{300}{K}$. Se le permite expandirse hasta $\SI{4.80}{L}$ mientras su temperatura sube a $\SI{330}{K}$. ¿Cuál es la nueva presión? (Pista: usa la ley combinada $\frac{P_1V_1}{T_1}=\frac{P_2V_2}{T_2}$.)
+
+\textit{Respuesta: $\approx \SI{0.807}{atm}$.}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item Un gas ideal es un modelo sin volumen propio ni interacciones intermoleculares.
+    \item Boyle: $P_1V_1=P_2V_2$ ($T,n$ ctes). Charles: $\frac{V_1}{T_1}=\frac{V_2}{T_2}$ ($P,n$ ctes). Gay-Lussac: $\frac{P_1}{T_1}=\frac{P_2}{T_2}$ ($V,n$ ctes). Avogadro: $\frac{V_1}{n_1}=\frac{V_2}{n_2}$ ($P,T$ ctes).
+    \item Ecuación general: $PV=nRT$, con $R$ dependiente de las unidades usadas.
+    \item $M = \dfrac{\rho R T}{P}$ permite hallar masa molar a partir de densidad.
+    \item Siempre trabaja con $T$ en Kelvin.
+\end{itemize}
+\end{resumen}
+
+% ======================================================================
+% CAPÍTULO 2 — TERMOQUÍMICA
+% ======================================================================
+
+\chapter{Termoquímica}
+\label{cap:termoquimica}
+
+\section{Funciones de estado y funciones de trayectoria}
+
+\begin{concepto}[]
+Una \textbf{función de estado} es una propiedad de un sistema que depende \textbf{únicamente} del estado actual del sistema (presión, temperatura, volumen, composición), sin importar el camino que se siguió para llegar a él. Ejemplos: presión, temperatura, volumen, energía interna ($U$), entalpía ($H$), entropía ($S$), energía de Gibbs ($G$).
+
+Una \textbf{función de trayectoria} (o función de camino) sí depende del proceso específico seguido, no solo de los estados inicial y final. Ejemplos: calor ($q$) y trabajo ($w$).
+\end{concepto}
+
+\begin{center}
+\begin{tikzpicture}[scale=1]
+\draw[thick,->] (0,0) -- (6.5,0) node[right] {$V$};
+\draw[thick,->] (0,0) -- (0,4) node[above] {$P$};
+\filldraw[fqAzul] (1,3) circle (2pt) node[above left] {Estado inicial $A$};
+\filldraw[fqVerde] (5,1) circle (2pt) node[below right] {Estado final $B$};
+\draw[fqDorado, thick, ->] (1,3) .. controls (2,3) and (2,1.3) .. (5,1);
+\draw[fqNaranja, thick, dashed, ->] (1,3) -- (1,1) -- (5,1);
+\node[fqDorado] at (3.6,2.3) {\small camino 1};
+\node[fqNaranja] at (2.2,0.6) {\small camino 2};
+\end{tikzpicture}
+\end{center}
+
+\begin{tip}[]
+El cambio en una función de estado, $\Delta X = X_{\text{final}} - X_{\text{inicial}}$, es \textbf{el mismo sin importar el camino} entre $A$ y $B$ en el diagrama de arriba. Esto es lo que hace posible la Ley de Hess: si $\Delta H$ solo depende de los estados inicial y final, puedes sumar o restar reacciones (caminos) como si fueran ecuaciones algebraicas y el resultado neto siempre será correcto.
+\end{tip}
+
+\section{Entalpía y su cambio}
+
+\begin{concepto}[]
+La \textbf{entalpía} ($H$) es una función de estado que representa el contenido calorífico de un sistema a presión constante. No se puede medir su valor absoluto, pero sí su \textbf{cambio}, $\Delta H$, que en un proceso a presión constante es igual al calor intercambiado con el entorno:
+\end{concepto}
+
+\begin{formula}[Definición y cambio de entalpía]
+$$H = U + PV \qquad \qquad \Delta H = q_p$$
+\end{formula}
+
+\begin{itemize}
+    \item Si $\Delta H < 0$: la reacción es \textbf{exotérmica} (libera calor al entorno).
+    \item Si $\Delta H > 0$: la reacción es \textbf{endotérmica} (absorbe calor del entorno).
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=7.3cm, height=5cm,
+  ylabel={Entalpía $H$}, xlabel={Avance de la reacción},
+  axis lines=left, xtick=\empty, ytick=\empty,
+  ymin=0, ymax=5, xmin=0, xmax=4,
+  title={\small Reacción exotérmica},
+]
+\draw[fqAzul, thick] (axis cs:0.2,3.5) -- (axis cs:1.6,3.5);
+\draw[fqAzul, thick] (axis cs:2.4,1.2) -- (axis cs:3.8,1.2);
+\draw[fqDorado, thick,->] (axis cs:1.6,3.5) .. controls (axis cs:2.0,4.4) .. (axis cs:2.4,1.2);
+\draw[<->, fqRojo] (axis cs:3.9,3.5) -- (axis cs:3.9,1.2);
+\node[fqRojo, right] at (axis cs:3.9,2.35) {\small $\Delta H<0$};
+\node[fqAzul] at (axis cs:0.9,3.8) {\small Reactivos};
+\node[fqAzul] at (axis cs:3.1,0.9) {\small Productos};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Ley de Hess}
+
+\begin{concepto}[]
+La \textbf{Ley de Hess} establece que el $\Delta H$ de una reacción global es igual a la \textbf{suma} de los $\Delta H$ de las reacciones individuales en que se puede descomponer, sin importar si esa reacción ocurre en un paso o en varios. Es consecuencia directa de que $H$ es función de estado.
+\end{concepto}
+
+\begin{tip}[]
+Para aplicar Hess: (1) escribe la reacción objetivo, (2) acomoda las reacciones dato de modo que sus reactivos y productos se cancelen hasta dar la reacción objetivo, (3) si inviertes una reacción, cambia el signo de su $\Delta H$; si la multiplicas por un coeficiente, multiplica también su $\Delta H$ por ese mismo coeficiente.
+\end{tip}
+
+\begin{resuelto}[]
+Calcula $\Delta H$ para: \ce{C(s) + O2(g) -> CO2(g)}, dadas:
+\begin{align*}
+\ce{C(s) + 1/2 O2(g) &-> CO(g)} & \Delta H_1 &= -110.5\ \text{kJ} \\
+\ce{CO(g) + 1/2 O2(g) &-> CO2(g)} & \Delta H_2 &= -283.0\ \text{kJ}
+\end{align*}
+
+\paso{Verificar que la suma directa de las dos reacciones da la reacción objetivo}
+Sumando ambas ecuaciones, el \ce{CO(g)} se cancela (aparece como producto en la primera y como reactivo en la segunda), y el \ce{O2} se combina: $\frac12 + \frac12 = 1$. El resultado neto es exactamente \ce{C(s) + O2(g) -> CO2(g)}.
+
+\paso{Sumar los $\Delta H$}
+$$\Delta H = \Delta H_1 + \Delta H_2 = (-110.5) + (-283.0) = \SI{-393.5}{kJ}$$
+
+\idea{Como $H$ es función de estado, da lo mismo quemar carbono directamente a \ce{CO2} que hacerlo en dos pasos pasando por \ce{CO}: el cambio total de entalpía es idéntico.}
+\aplicacion{En la OHQ, los problemas de Hess casi siempre requieren invertir o multiplicar alguna de las reacciones dato antes de sumarlas; practica identificar rápido qué sustancia debe cancelarse.}
+\end{resuelto}
+
+\begin{error}[]
+Olvidar cambiar el signo de $\Delta H$ al invertir una reacción, o no multiplicar el $\Delta H$ completo cuando se multiplica toda la ecuación por un coeficiente estequiométrico.
+\end{error}
+
+\subsection{Entalpías de formación estándar}
+
+\begin{concepto}[]
+La \textbf{entalpía estándar de formación} ($\Delta H_f^\circ$) es el cambio de entalpía al formar 1 mol de un compuesto a partir de sus elementos en su estado estándar (forma más estable a \SI{1}{atm} y \SI{25}{\celsius}). Por definición, $\Delta H_f^\circ$ de cualquier elemento en su estado estándar es \textbf{cero}.
+\end{concepto}
+
+\begin{formula}[Entalpía de reacción a partir de entalpías de formación]
+$$\Delta H_{\text{rxn}}^\circ = \sum n_p\, \Delta H_f^\circ(\text{productos}) - \sum n_r\, \Delta H_f^\circ(\text{reactivos})$$
+\end{formula}
+
+\section{Entropía}
+
+\begin{concepto}[]
+La \textbf{entropía} ($S$) es una función de estado que mide el grado de desorden o el número de microestados accesibles para un sistema. Cuanto mayor es el desorden molecular (más formas de distribuir la energía y las partículas), mayor es $S$.
+\end{concepto}
+
+\begin{itemize}
+    \item $S_{\text{gas}} > S_{\text{líquido}} > S_{\text{sólido}}$ para una misma sustancia.
+    \item La entropía aumenta cuando aumenta el número de moles de gas en una reacción.
+    \item La \textbf{Segunda Ley de la Termodinámica} establece que la entropía \textbf{total del universo} (sistema + entorno) siempre aumenta en un proceso espontáneo: $\Delta S_{\text{universo}} = \Delta S_{\text{sistema}} + \Delta S_{\text{entorno}} > 0$.
+\end{itemize}
+
+\begin{tip}[]
+Para predecir el signo de $\Delta S$ de una reacción sin calcular nada, cuenta moles de gas: si $\Delta n_{\text{gas}} > 0$ (se producen más moles gaseosos de los que se consumen), entonces $\Delta S > 0$; si $\Delta n_{\text{gas}} < 0$, entonces $\Delta S < 0$.
+\end{tip}
+
+\section{Energía de Gibbs y espontaneidad}
+
+\begin{concepto}[]
+La \textbf{energía libre de Gibbs} ($G$) combina la entalpía y la entropía del sistema en una sola función de estado que permite predecir la \textbf{espontaneidad} de un proceso a presión y temperatura constantes, \textbf{sin necesidad de analizar el entorno}.
+\end{concepto}
+
+\begin{formula}[Energía de Gibbs]
+$$\Delta G = \Delta H - T\Delta S$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{cccl}
+\toprule
+$\Delta H$ & $\Delta S$ & $\Delta G$ & \textbf{Espontaneidad} \\
+\midrule
+$-$ & $+$ & siempre $-$ & Espontánea a cualquier $T$ \\
+$+$ & $-$ & siempre $+$ & No espontánea a ninguna $T$ \\
+$-$ & $-$ & depende & Espontánea a $T$ \textbf{baja} \\
+$+$ & $+$ & depende & Espontánea a $T$ \textbf{alta} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+    \item Si $\Delta G < 0$: el proceso es \textbf{espontáneo} (exergónico) en el sentido en que está escrito.
+    \item Si $\Delta G > 0$: el proceso \textbf{no es espontáneo} tal como está escrito (sí lo es en sentido inverso).
+    \item Si $\Delta G = 0$: el sistema está en \textbf{equilibrio}.
+\end{itemize}
+
+\begin{resuelto}[]
+Para una reacción, $\Delta H = \SI{-92.4}{kJ}$ y $\Delta S = \SI{-198.6}{J/K}$ a $\SI{298}{K}$. ¿Es espontánea a esta temperatura? ¿A partir de qué temperatura deja de serlo?
+
+\paso{Unificar unidades}
+$\Delta S = -0.1986\ \text{kJ/K}$ (convertimos J a kJ para que coincida con $\Delta H$).
+
+\paso{Calcular $\Delta G$ a 298 K}
+$$\Delta G = \Delta H - T\Delta S = -92.4 - (298)(-0.1986) = -92.4 + 59.2 = \SI{-33.2}{kJ}$$
+Como $\Delta G<0$, \textbf{sí es espontánea} a \SI{298}{K}.
+
+\paso{Encontrar la temperatura límite (donde $\Delta G = 0$)}
+$$0 = \Delta H - T\Delta S \ \Rightarrow\ T = \frac{\Delta H}{\Delta S} = \frac{-92.4}{-0.1986} \approx \SI{465}{K}$$
+
+\paso{Interpretar}
+Como $\Delta H<0$ y $\Delta S<0$ (fila 3 de la tabla), la reacción es espontánea solo a temperaturas \textbf{bajas}: para $T < \SI{465}{K}$ es espontánea, y para $T>\SI{465}{K}$ deja de serlo.
+
+\idea{El signo de $\Delta G$ resulta de una competencia entre $\Delta H$ (favorece el orden/liberación de energía) y $-T\Delta S$ (favorece el desorden, con más peso a mayor $T$); la temperatura actúa como el "árbitro" de esa competencia.}
+\aplicacion{Este tipo de análisis explica por qué reacciones exotérmicas como la solidificación del agua ocurren solas a bajas temperaturas pero se revierten (fusión) al calentar: es la misma reacción, con signos de $\Delta H$ y $\Delta S$ opuestos.}
+\end{resuelto}
+
+\begin{error}[]
+Mezclar unidades de $\Delta H$ (usualmente en kJ) con $\Delta S$ (usualmente en J/K) sin convertir. Es el error numérico más frecuente al calcular $\Delta G$ en la olimpiada.
+\end{error}
+
+\seccionpractica
+
+\begin{propuesto}[]
+Dadas: \ce{S(s) + O2(g) -> SO2(g)}, $\Delta H_1 = \SI{-296.8}{kJ}$, y \ce{2 SO2(g) + O2(g) -> 2SO3(g)}, $\Delta H_2 = \SI{-198.4}{kJ}$, calcula $\Delta H$ para \ce{2S(s) + 3O2(g) -> 2SO3(g)}.
+
+\textit{Respuesta: $\Delta H = 2\Delta H_1 + \Delta H_2 = \SI{-792.0}{kJ}$.}
+\end{propuesto}
+
+\begin{propuesto}[]
+Para una reacción, $\Delta H = \SI{+45.0}{kJ}$ y $\Delta S = \SI{+125}{J/K}$. ¿Es espontánea a \SI{25}{\celsius}? ¿A qué temperatura mínima se vuelve espontánea?
+
+\textit{Respuesta: a 298 K, $\Delta G \approx +7.7\ \text{kJ}$ (no espontánea); se vuelve espontánea para $T > 360\ \text{K}$.}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item Función de estado: depende solo del estado actual ($H,S,G,U$). Función de trayectoria: depende del camino ($q,w$).
+    \item Ley de Hess: los $\Delta H$ se suman como ecuaciones algebraicas; invertir cambia el signo, multiplicar escala el valor.
+    \item $\Delta H_{\text{rxn}}^\circ = \sum n_p \Delta H_f^\circ(\text{productos}) - \sum n_r \Delta H_f^\circ(\text{reactivos})$.
+    \item La entropía mide desorden: $S_{\text{gas}}>S_{\text{líq}}>S_{\text{sól}}$; aumenta con más moles de gas.
+    \item $\Delta G = \Delta H - T\Delta S$; $\Delta G<0$ espontánea, $\Delta G>0$ no espontánea, $\Delta G=0$ equilibrio.
+    \item Cuidado con las unidades: convierte $\Delta S$ a las mismas unidades de $\Delta H$ antes de calcular $\Delta G$.
+\end{itemize}
+\end{resumen}
+
+% ======================================================================
+% CAPÍTULO 3 — GASES REALES
+% ======================================================================
+
+\chapter{Gases reales}
+\label{cap:reales}
+
+\section{¿Por qué falla el modelo ideal?}
+
+\begin{concepto}[]
+Ningún gas real es realmente ideal. El modelo ideal ignora dos efectos que sí existen en la materia real:
+\begin{itemize}
+    \item Las moléculas \textbf{sí ocupan un volumen propio}, por pequeño que sea.
+    \item Las moléculas \textbf{sí se atraen entre sí} a distancias cortas (fuerzas de Van der Waals, puentes de hidrógeno, dipolo-dipolo), lo cual reduce la presión que ejercen contra las paredes del recipiente comparada con la que ejercería un gas ideal.
+\end{itemize}
+Estas dos desviaciones se vuelven importantes cuando el gas está \textbf{muy comprimido} (alta presión, poco espacio entre moléculas) o \textbf{muy frío} (baja energía cinética, las fuerzas de atracción dejan de ser despreciables frente al movimiento térmico).
+\end{concepto}
+
+\begin{center}
+\begin{tabular}{p{5.6cm}p{5.6cm}}
+\toprule
+\textbf{Gas ideal} & \textbf{Gas real} \\
+\midrule
+Partículas puntuales (sin volumen) & Partículas con volumen propio finito \\
+Sin fuerzas intermoleculares & Fuerzas de atracción/repulsión presentes \\
+Choques perfectamente elásticos & Puede haber pérdida de energía en choques \\
+Cumple $PV=nRT$ en todo rango & Se desvía de $PV=nRT$, sobre todo a alta $P$ y baja $T$ \\
+No condensa ni licúa & Puede condensar a líquido si se enfría o comprime lo suficiente \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tip}[]
+El \textbf{factor de compresibilidad} $Z = \dfrac{PV}{nRT}$ mide qué tan lejos está un gas real del comportamiento ideal. Para un gas ideal, $Z=1$ siempre. Si $Z<1$, dominan las fuerzas de atracción (el gas ocupa menos volumen del esperado); si $Z>1$, domina el volumen propio de las moléculas (el gas ocupa más volumen del esperado). Este factor aparece con frecuencia en preguntas conceptuales de opción múltiple en la OHQ.
+\end{tip}
+
+\section{Ecuación de Van der Waals}
+
+\begin{concepto}[]
+Johannes van der Waals corrigió la ecuación de gas ideal añadiendo dos términos de corrección: uno para el volumen propio de las moléculas ($b$) y otro para las fuerzas de atracción intermoleculares ($a$).
+\end{concepto}
+
+\begin{formula}[Ecuación de Van der Waals]
+$$\left(P + a\frac{n^2}{V^2}\right)(V - nb) = nRT$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{@{}p{2.3cm}p{11.3cm}@{}}
+\toprule
+\textbf{Término} & \textbf{Corrige} \\
+\midrule
+$a\dfrac{n^2}{V^2}$ & Se \textbf{suma} a la presión medida, porque las fuerzas de atracción entre moléculas hacen que choquen contra las paredes con \textbf{menos} fuerza de la que tendrían sin esas atracciones; $a$ es grande en gases polares o fácilmente polarizables. \\[4pt]
+$nb$ & Se \textbf{resta} al volumen del recipiente, porque las moléculas no son puntos: el volumen realmente disponible para que se muevan es menor que $V$; $b$ es grande en moléculas voluminosas. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tip}[]
+Fíjate en la estructura: $\left(P_{\text{corregida}}\right)\left(V_{\text{corregido}}\right) = nRT$ — es exactamente la ecuación de gas ideal, pero con la presión "verdadera" (mayor a la medida, por eso se suma $a n^2/V^2$) y el volumen "verdadero" (menor al del recipiente, por eso se resta $nb$). Entender esta estructura te evita memorizar la fórmula mecánicamente.
+\end{tip}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=9.5cm, height=6.5cm,
+    xlabel={$V$ (L)}, ylabel={$P$ (atm)},
+    axis lines=left, xmin=0.05, xmax=3, ymin=0, ymax=6,
+    legend pos=north east, legend style={font=\small},
+    title={\small Isotermas: gas ideal vs. Van der Waals},
+]
+\addplot[fqAzul, thick, domain=0.18:3, samples=80] {1.5/x};
+\addlegendentry{Ideal ($PV=nRT$)}
+\addplot[fqRojo, thick, domain=0.28:3, samples=120]
+  {1.5/(x-0.05) - 0.15/(x*x)};
+\addlegendentry{Van der Waals}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tip}[]
+Observa en la gráfica que, a volúmenes grandes, ambas curvas prácticamente coinciden: es la confirmación gráfica de que \textbf{todo gas real se comporta como ideal a bajas presiones y volúmenes grandes} (las moléculas están tan separadas que su volumen propio y sus atracciones se vuelven insignificantes). Las curvas se separan a volúmenes pequeños, donde las correcciones $a$ y $b$ empiezan a importar.
+\end{tip}
+
+\begin{resuelto}[]
+Un mol de \ce{CO2} ($a = \SI{3.59}{atm.L^2.mol^{-2}}$, $b = \SI{0.0427}{L/mol}$) está confinado en $\SI{1.00}{L}$ a $\SI{300}{K}$. Compara la presión predicha por el modelo ideal con la predicha por Van der Waals.
+
+\paso{Presión con el modelo ideal}
+$$P_{\text{ideal}} = \frac{nRT}{V} = \frac{(1)(0.08206)(300)}{1.00} \approx \SI{24.6}{atm}$$
+
+\paso{Presión con Van der Waals}
+Despejamos $P$ de la ecuación:
+$$P = \frac{nRT}{V-nb} - a\frac{n^2}{V^2} = \frac{(1)(0.08206)(300)}{1.00-0.0427} - 3.59\frac{(1)^2}{(1.00)^2}$$
+$$P = \frac{24.62}{0.9573} - 3.59 \approx 25.72 - 3.59 = \SI{22.1}{atm}$$
+
+\paso{Interpretar}
+El modelo ideal sobreestima la presión real ($\SI{24.6}{atm}$ frente a $\SI{22.1}{atm}$): a esta densidad, las fuerzas de atracción del \ce{CO2} ($a$ relativamente grande, por ser una molécula polarizable) dominan sobre la corrección de volumen, haciendo que la presión real sea \textbf{menor} que la ideal.
+
+\idea{El resultado neto de Van der Waals depende de cuál corrección domina: si $a$ es grande frente a $b$, la presión real es menor que la ideal; si $b$ domina, ocurre lo contrario.}
+\aplicacion{En la OHQ suelen dar $a$ y $b$ en tablas y pedir comparar $P_{\text{ideal}}$ contra $P_{\text{VdW}}$ para razonar cuál interacción domina en un gas dado (por ejemplo, gases nobles pequeños como el He tienen $a$ muy pequeño).}
+\end{resuelto}
+
+\begin{error}[]
+Olvidar que las constantes $a$ y $b$ de Van der Waals \textbf{son específicas de cada gas}: no existe un solo valor universal como con $R$. Siempre deben darte (o debes buscar) los valores de $a$ y $b$ correspondientes al gas del problema.
+\end{error}
+
+\seccionpractica
+
+\begin{propuesto}[]
+¿Bajo qué condiciones (presión y temperatura) el comportamiento de un gas real se aproxima más al de un gas ideal? Justifica en términos de las dos correcciones de Van der Waals.
+
+\textit{Respuesta: a baja presión y alta temperatura, porque el volumen es grande (las moléculas ocupan una fracción despreciable de $V$, así que $nb \ll V$) y la energía cinética es alta comparada con las fuerzas de atracción (así que $an^2/V^2 \ll P$).}
+\end{propuesto}
+
+\begin{propuesto}[]
+Explica por qué el gas \ce{NH3} (amoníaco, polar, con puentes de hidrógeno) tiene una constante $a$ de Van der Waals mucho mayor que la del gas \ce{He} (no polar, monoatómico).
+
+\textit{Respuesta: $a$ mide la magnitud de las fuerzas de atracción intermoleculares; el \ce{NH3} forma puentes de hidrógeno (fuerzas fuertes), mientras que el \ce{He} solo tiene fuerzas de dispersión de London muy débiles.}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item Los gases reales se desvían del modelo ideal porque sus moléculas tienen volumen propio y se atraen entre sí.
+    \item Las desviaciones son mayores a \textbf{alta presión} y \textbf{baja temperatura}.
+    \item Factor de compresibilidad: $Z = PV/nRT$; $Z=1$ ideal, $Z<1$ dominan atracciones, $Z>1$ domina volumen propio.
+    \item Van der Waals: $\left(P + a\dfrac{n^2}{V^2}\right)(V-nb) = nRT$, con $a$ corrigiendo la presión (atracciones) y $b$ corrigiendo el volumen (tamaño molecular).
+    \item $a$ y $b$ son constantes propias de cada gas, no universales.
+\end{itemize}
+\end{resumen}
+
+% ======================================================================
+% CAPÍTULO 4 — PROPIEDADES COLIGATIVAS
+% ======================================================================
+
+\chapter{Propiedades coligativas}
+\label{cap:coligativas}
+
+\section{¿Qué son las propiedades coligativas?}
+
+\begin{concepto}[]
+Las \textbf{propiedades coligativas} son propiedades físicas de una disolución que dependen únicamente del \textbf{número de partículas de soluto disueltas} (su concentración), y \textbf{no} de la identidad química del soluto. Las cuatro propiedades coligativas clásicas son: descenso del punto de congelación (crioscópico), aumento del punto de ebullición (ebulloscópico), descenso de la presión de vapor, y presión osmótica. En este capítulo nos enfocamos en las dos primeras, que son las que evalúa la OHQ en fisicoquímica.
+\end{concepto}
+
+\begin{tip}[]
+La palabra clave es "coligativas": vienen de \textit{co-ligar}, "atadas juntas" por el número de partículas. Si disuelves 1 mol de glucosa (no se disocia) o 1 mol de \ce{NaCl} (se disocia en 2 iones), el efecto sobre estas propiedades \textbf{no es el mismo}, porque lo que importa es el número total de partículas disueltas, no los moles de fórmula inicial. Ahí es donde entra el factor de Van't Hoff, $i$.
+\end{tip}
+
+\section{Ley de Raoult y descenso de la presión de vapor}
+
+\begin{concepto}[]
+Cuando se disuelve un soluto no volátil en un disolvente, la presión de vapor de la disolución es \textbf{menor} que la del disolvente puro, porque las moléculas de soluto ocupan parte de la superficie del líquido y "estorban" el escape de moléculas de disolvente hacia la fase gaseosa.
+\end{concepto}
+
+\begin{formula}[Ley de Raoult]
+$$P_{\text{disolución}} = X_{\text{disolvente}} \cdot P^\circ_{\text{disolvente}}$$
+\end{formula}
+
+donde $X_{\text{disolvente}}$ es la fracción molar del disolvente en la disolución y $P^\circ_{\text{disolvente}}$ es la presión de vapor del disolvente puro a esa temperatura.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=8.5cm, height=5.5cm,
+    xlabel={Fracción molar del disolvente $X_{\text{disolv}}$},
+    ylabel={Presión de vapor},
+    axis lines=left, xmin=0, xmax=1.05, ymin=0, ymax=1.15,
+    xtick={0,1}, xticklabels={0,1}, ytick=\empty,
+    title={\small Ley de Raoult (disolución ideal)},
+]
+\addplot[fqAzul, thick, domain=0:1] {x};
+\node[fqAzul] at (axis cs:0.5,0.65) {\small $P=X_{\text{disolv}}P^\circ$};
+\draw[dashed, fqGris] (axis cs:1,0) -- (axis cs:1,1) node[above] {\small $P^\circ$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tip}[]
+El descenso de la presión de vapor se puede escribir directamente en términos de la fracción molar del \textbf{soluto}: $\Delta P = P^\circ - P = X_{\text{soluto}}\, P^\circ$. Esta forma es más rápida cuando el problema te da directamente los moles de soluto y disolvente.
+\end{tip}
+
+\section{Descenso crioscópico (del punto de congelación)}
+
+\begin{concepto}[]
+Al disolver un soluto en un disolvente, el punto de congelación de la disolución es \textbf{menor} que el del disolvente puro. Esto ocurre porque la presencia de partículas de soluto interfiere con el ordenamiento de las moléculas del disolvente en la red cristalina del sólido, así que se necesita una temperatura más baja para que el disolvente logre solidificar.
+\end{concepto}
+
+\begin{formula}[Descenso crioscópico]
+$$\Delta T_c = i \, K_c \, m$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\textbf{Símbolo} & \textbf{Significado} \\
+\midrule
+$\Delta T_c$ & Descenso del punto de congelación ($T_c^\circ - T_c$) \\
+$K_c$ & Constante crioscópica molal del disolvente (propiedad tabulada, °C·kg/mol) \\
+$m$ & Molalidad del soluto (mol de soluto / kg de disolvente) \\
+$i$ & Factor de Van't Hoff: número de partículas en que se disocia cada unidad de soluto \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{concepto}[: El factor de Van't Hoff]
+$i$ representa cuántas partículas \textbf{reales} produce cada fórmula unitaria de soluto al disolverse:
+\begin{itemize}
+    \item Solutos moleculares que no se disocian (glucosa, sacarosa, urea, etanol): $i \approx 1$.
+    \item \ce{NaCl -> Na+ + Cl-}: $i \approx 2$.
+    \item \ce{CaCl2 -> Ca^2+ + 2Cl-}: $i \approx 3$.
+    \item \ce{Al2(SO4)3 -> 2Al^3+ + 3SO4^2-}: $i \approx 5$.
+\end{itemize}
+En la práctica real $i$ es ligeramente menor que el valor "teórico" por efectos de asociación iónica, pero en problemas olímpicos casi siempre se usa el valor teórico salvo que se indique lo contrario.
+\end{concepto}
+
+\begin{error}[]
+Olvidar el factor $i$ al trabajar con solutos iónicos (electrolitos). Es el error más común en propiedades coligativas: tratar \ce{NaCl} como si aportara la misma cantidad de partículas que la glucosa a la misma molalidad, cuando en realidad aporta el doble.
+\end{error}
+
+\begin{resuelto}[]
+¿A qué temperatura se congelará una disolución preparada con $\SI{25.0}{g}$ de \ce{MgCl2} ($M = \SI{95.21}{g/mol}$) disueltos en $\SI{500}{g}$ de agua? ($K_c$ del agua $= \SI{1.86}{\celsius.kg/mol}$; el agua pura congela a $\SI{0}{\celsius}$.)
+
+\paso{Calcular los moles y la molalidad}
+$$n_{\ce{MgCl2}} = \frac{25.0\ \text{g}}{95.21\ \text{g/mol}} = 0.2626\ \text{mol}$$
+$$m = \frac{0.2626\ \text{mol}}{0.500\ \text{kg}} = \SI{0.5252}{mol/kg}$$
+
+\paso{Determinar el factor de Van't Hoff}
+\ce{MgCl2 -> Mg^2+ + 2Cl-}, así que $i=3$.
+
+\paso{Aplicar la fórmula del descenso crioscópico}
+$$\Delta T_c = i\,K_c\,m = (3)(1.86)(0.5252) \approx \SI{2.93}{\celsius}$$
+
+\paso{Calcular la temperatura de congelación final}
+$$T_c = T_c^\circ - \Delta T_c = 0 - 2.93 = \SI{-2.93}{\celsius}$$
+
+\idea{El \ce{MgCl2} triplica su efecto coligativo comparado con un soluto no iónico de la misma molalidad, porque cada unidad fórmula libera 3 iones al disolverse — esto es justamente lo que se usa en las calles para fundir hielo con sales.}
+\aplicacion{Este es el tipo de problema estrella del área coligativa en la OHQ: siempre revisa primero si el soluto es un electrolito fuerte antes de sustituir en la fórmula.}
+\end{resuelto}
+
+\seccionpractica
+
+\begin{propuesto}[]
+¿Cuál disolución acuosa tendrá el punto de congelación más bajo: $\SI{0.10}{m}$ de glucosa (no electrolito) o $\SI{0.10}{m}$ de \ce{K2SO4}? Justifica sin hacer cálculos numéricos.
+
+\textit{Respuesta: la de \ce{K2SO4}, porque se disocia en 3 iones ($i=3$) frente a $i=1$ de la glucosa, así que produce un $\Delta T_c$ tres veces mayor a la misma molalidad.}
+\end{propuesto}
+
+\begin{propuesto}[]
+Se disuelven $\SI{10.0}{g}$ de un no electrolito desconocido en $\SI{200}{g}$ de agua, y la disolución congela a $\SI{-1.02}{\celsius}$. Calcula la masa molar aproximada del soluto ($K_c=\SI{1.86}{\celsius.kg/mol}$).
+
+\textit{Respuesta: $m \approx 0.548\ \text{mol/kg}$, $n \approx 0.1097\ \text{mol}$, $M \approx \SI{91.2}{g/mol}$.}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item Las propiedades coligativas dependen del \textbf{número} de partículas de soluto, no de su identidad.
+    \item Ley de Raoult: $P_{\text{disolución}} = X_{\text{disolvente}} P^\circ_{\text{disolvente}}$.
+    \item Descenso crioscópico: $\Delta T_c = i K_c m$, con $m$ en molalidad (mol soluto / kg disolvente).
+    \item El factor de Van't Hoff $i$ cuenta las partículas reales producidas por disociación; $i=1$ para no electrolitos, $i>1$ para electrolitos.
+    \item Siempre verifica si el soluto se disocia antes de aplicar la fórmula.
+\end{itemize}
+\end{resumen}
+
+% ======================================================================
+% CAPÍTULO 5 — LEYES DE FARADAY
+% ======================================================================
+
+\chapter{Leyes de Faraday}
+\label{cap:faraday}
+
+\section{Corriente eléctrica y Ley de Ohm}
+
+\begin{concepto}[]
+La \textbf{corriente eléctrica} ($I$) es la cantidad de carga eléctrica que fluye a través de un conductor por unidad de tiempo. En una celda electrolítica, esta carga es transportada por electrones en el circuito externo y por iones dentro de la disolución.
+\end{concepto}
+
+\begin{formula}[Corriente y carga]
+$$I = \frac{Q}{t} \qquad \Longrightarrow \qquad Q = I\,t$$
+\end{formula}
+
+donde $I$ está en amperios (A), $Q$ en culombios (C) y $t$ en segundos (s).
+
+\begin{concepto}[: Ley de Ohm]
+La \textbf{Ley de Ohm} relaciona el voltaje aplicado, la corriente que circula y la resistencia del circuito. Aunque es un tema de física de circuitos, aparece con frecuencia en problemas de electroquímica olímpica al calcular la corriente que produce una fuente de voltaje conocida en una celda de resistencia conocida.
+\end{concepto}
+
+\begin{formula}[Ley de Ohm]
+$$V = IR$$
+\end{formula}
+
+con $V$ en voltios (V), $I$ en amperios (A) y $R$ en ohmios ($\Omega$).
+
+\section{La constante de Faraday}
+
+\begin{concepto}[]
+La \textbf{constante de Faraday} ($F$) representa la carga eléctrica transportada por \textbf{1 mol de electrones}. Es el puente que conecta el mundo eléctrico (culombios, amperios) con el mundo químico (moles de sustancia).
+\end{concepto}
+
+\begin{formula}[Constante de Faraday]
+$$F = \SI{96485}{C/mol\ e^-} \approx \SI{96500}{C/mol\ e^-}$$
+\end{formula}
+
+\begin{tip}[]
+La constante de Faraday se obtiene multiplicando la carga de un electrón por el número de Avogadro: $F = N_A \cdot e^- = (6.022\times10^{23})(1.602\times10^{-19}\ \text{C}) \approx \SI{96485}{C/mol}$. Si alguna vez olvidas el valor exacto en examen, puedes reconstruirlo a partir de estas dos constantes fundamentales.
+\end{tip}
+
+\section{Leyes de Faraday de la electrólisis}
+
+\begin{concepto}[]
+Las \textbf{Leyes de Faraday} conectan la cantidad de carga eléctrica que pasa por una celda electrolítica con la cantidad de sustancia depositada o liberada en los electrodos.
+\begin{itemize}
+    \item \textbf{Primera Ley}: la masa de sustancia depositada o liberada en un electrodo es directamente proporcional a la cantidad de carga eléctrica que pasa por la celda.
+    \item \textbf{Segunda Ley}: para una misma cantidad de carga, la masa de sustancias distintas depositadas es proporcional a su masa equivalente ($M/z$, donde $z$ es el número de electrones intercambiados por partícula).
+\end{itemize}
+\end{concepto}
+
+\begin{formula}[Ley de Faraday combinada]
+$$m = \frac{Q}{F}\cdot\frac{M}{z} = \frac{I\,t\,M}{zF}$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\textbf{Símbolo} & \textbf{Significado} \\
+\midrule
+$m$ & Masa de sustancia depositada o liberada (g) \\
+$Q=It$ & Carga total que pasó por la celda (C) \\
+$M$ & Masa molar de la sustancia (g/mol) \\
+$z$ & Número de electrones transferidos por partícula (según su semirreacción) \\
+$F$ & Constante de Faraday ($\SI{96500}{C/mol}$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Celdas electrolíticas}
+
+\begin{concepto}[]
+Una \textbf{celda electrolítica} usa energía eléctrica externa (una fuente de poder) para forzar una reacción redox \textbf{no espontánea} ($\Delta G>0$). Esto la distingue de una celda galvánica (o voltaica), que genera electricidad a partir de una reacción redox espontánea ($\Delta G<0$).
+\end{concepto}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+% Vaso de precipitado (contenedor)
+\draw[thick] (0,0) rectangle (6,3.0);
+% Electrolito
+\draw[fqAzul, fill=fqAzulClaro] (0.15,0) rectangle (5.85,2.4);
+\node[fqAzul] at (3,1.0) {\footnotesize Electrolito (iones en disolución)};
+% Electrodos (varillas), sobresalen del vaso
+\draw[thick, fqGris] (1.6,0.15) -- (1.6,3.9);
+\draw[thick, fqGris] (4.4,0.15) -- (4.4,3.9);
+% Cables hacia la fuente de poder
+\draw[thick] (1.6,3.9) -- (1.6,4.3) -- (2.5,4.3);
+\draw[thick] (4.4,3.9) -- (4.4,4.3) -- (3.5,4.3);
+% Fuente de poder externa
+\draw[thick, fill=white] (2.5,4.1) rectangle (3.5,4.5);
+\node at (3,4.3) {\footnotesize $-\ \ +$};
+\node[above] at (3,4.55) {\footnotesize Fuente de poder externa};
+% Etiquetas de electrodos, a los lados para no chocar con los cables
+\node[fqGris, align=center] at (1.6,-0.55) {\footnotesize Cátodo ($-$)\\[-2pt]\footnotesize\textcolor{fqVerde}{reducción}};
+\node[fqGris, align=center] at (4.4,-0.55) {\footnotesize Ánodo ($+$)\\[-2pt]\footnotesize\textcolor{fqRojo}{oxidación}};
+\end{tikzpicture}
+\end{center}
+
+\begin{tip}[]
+En \textbf{cualquier} celda (electrolítica o galvánica), la regla de nombres de electrodos es la misma: en el \textbf{cátodo ocurre siempre la reducción} y en el \textbf{ánodo ocurre siempre la oxidación}. Lo que cambia entre los dos tipos de celda es la polaridad (signo) de cada electrodo, no qué reacción ocurre en cuál.
+\end{tip}
+
+\begin{resuelto}[]
+¿Cuántos gramos de cobre metálico se depositan en el cátodo de una celda electrolítica si se hace pasar una corriente de $\SI{2.50}{A}$ durante $\SI{1.00}{h}$ a través de una disolución de \ce{CuSO4}? ($M_{\ce{Cu}} = \SI{63.55}{g/mol}$)
+
+\paso{Identificar la semirreacción y el valor de $z$}
+$$\ce{Cu^2+ + 2e- -> Cu(s)} \qquad \Rightarrow \qquad z=2$$
+
+\paso{Calcular la carga total}
+$$t = 1.00\ \text{h} = 3600\ \text{s} \qquad Q = It = (2.50\ \text{A})(3600\ \text{s}) = \SI{9000}{C}$$
+
+\paso{Aplicar la ley de Faraday}
+$$m = \frac{Q\,M}{zF} = \frac{(9000)(63.55)}{(2)(96500)} \approx \SI{2.96}{g}$$
+
+\idea{Cada mol de Cu depositado requiere 2 moles de electrones, así que primero conviertes carga a moles de electrones ($Q/F$), luego usas la estequiometría de la semirreacción para pasar a moles de Cu, y finalmente a gramos con la masa molar.}
+\aplicacion{Este esquema —carga $\to$ moles de e$^-$ $\to$ moles de sustancia $\to$ gramos— es el "puente estequiométrico" central de toda la electroquímica olímpica; funciona igual para calcular volúmenes de gas liberado en un electrodo (usando luego $PV=nRT$).}
+\end{resuelto}
+
+\begin{error}[]
+Confundir el número de electrones $z$ de la semirreacción con el número de moles de la sustancia. Por ejemplo, en \ce{Al^3+ + 3e- -> Al}, $z=3$, no $z=1$; usar el valor incorrecto de $z$ es el error más común en problemas de Faraday.
+\end{error}
+
+\seccionpractica
+
+\begin{propuesto}[]
+¿Qué corriente constante se necesita para depositar $\SI{5.00}{g}$ de plata (\ce{Ag+ + e- -> Ag}, $M=\SI{107.87}{g/mol}$) en $\SI{30.0}{min}$?
+
+\textit{Respuesta: $Q = mFz/M \approx \SI{4475}{C}$; $I = Q/t \approx \SI{2.49}{A}$.}
+\end{propuesto}
+
+\begin{propuesto}[]
+Una celda electrolítica libera gas \ce{H2} en el cátodo según \ce{2H+ + 2e- -> H2(g)}. Si pasan $\SI{4.00}{A}$ durante $\SI{965}{s}$, ¿cuántos moles de \ce{H2} se producen?
+
+\textit{Respuesta: $Q=3860\ \text{C}$; $n(e^-)=0.0400\ \text{mol}$; $n(\ce{H2}) = 0.0200\ \text{mol}$ (por la relación 2 e$^-$ : 1 \ce{H2}).}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item $Q=It$; Ley de Ohm: $V=IR$.
+    \item Constante de Faraday: $F\approx\SI{96500}{C/mol\ e^-}$, la carga de un mol de electrones.
+    \item Ley de Faraday combinada: $m = \dfrac{ItM}{zF}$.
+    \item Cátodo: siempre reducción. Ánodo: siempre oxidación (en celdas electrolíticas y galvánicas por igual).
+    \item Celda electrolítica: usa electricidad externa para forzar una reacción no espontánea.
+    \item El valor de $z$ sale de la semirreacción balanceada; identifícalo con cuidado antes de calcular.
+\end{itemize}
+\end{resumen}
+
+% ======================================================================
+% CAPÍTULO 6 — CINÉTICA QUÍMICA
+% ======================================================================
+
+\chapter{Cinética química}
+\label{cap:cinetica}
+
+\section{Velocidad de reacción}
+
+\begin{concepto}[]
+La \textbf{velocidad de reacción} mide qué tan rápido cambia la concentración de reactivos o productos con el tiempo. Para una reacción general $aA + bB \to cC + dD$, la velocidad se expresa de forma que sea la misma sin importar qué sustancia se esté midiendo, dividiendo cada término entre su coeficiente estequiométrico.
+\end{concepto}
+
+\begin{formula}[Expresión de la velocidad de reacción]
+$$\text{Velocidad} = -\frac{1}{a}\frac{d[A]}{dt} = -\frac{1}{b}\frac{d[B]}{dt} = \frac{1}{c}\frac{d[C]}{dt} = \frac{1}{d}\frac{d[D]}{dt}$$
+\end{formula}
+
+\begin{tip}[]
+El signo negativo en los reactivos existe porque su concentración \textbf{disminuye} con el tiempo, y queremos que la velocidad sea siempre un número positivo. Los productos no llevan signo negativo porque su concentración \textbf{aumenta}.
+\end{tip}
+
+\section{Ley de velocidad y orden de reacción}
+
+\begin{concepto}[]
+La \textbf{ley de velocidad} (o ecuación de velocidad) expresa cómo depende la velocidad de una reacción de las concentraciones de los reactivos, de forma \textbf{experimental} (no se puede deducir solo mirando la ecuación balanceada, salvo en reacciones elementales).
+\end{concepto}
+
+\begin{formula}[Ley de velocidad general]
+$$v = k\,[A]^m[B]^n$$
+\end{formula}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+\textbf{Símbolo} & \textbf{Significado} \\
+\midrule
+$k$ & Constante de velocidad (o constante cinética); depende de la temperatura \\
+$m$ & Orden de reacción respecto al reactivo $A$ (se determina experimentalmente) \\
+$n$ & Orden de reacción respecto al reactivo $B$ \\
+$m+n$ & Orden \textbf{global} (u orden total) de la reacción \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{error}[]
+Asumir que los exponentes $m$ y $n$ de la ley de velocidad son iguales a los coeficientes estequiométricos $a$ y $b$ de la ecuación balanceada. Esto \textbf{solo} es válido para reacciones elementales de un solo paso; en la mayoría de los casos, los órdenes de reacción deben determinarse experimentalmente (por ejemplo, con el método de las velocidades iniciales) y no tienen por qué coincidir con los coeficientes.
+\end{error}
+
+\subsection{Determinación experimental del orden: método de velocidades iniciales}
+
+\begin{tip}[]
+Para encontrar el orden respecto a un reactivo con datos experimentales, compara dos corridas donde \textbf{solo cambia la concentración de ese reactivo} (las demás se mantienen constantes) y observa cómo cambia la velocidad inicial:
+$$\frac{v_2}{v_1} = \left(\frac{[A]_2}{[A]_1}\right)^m \ \Rightarrow\ m = \frac{\log(v_2/v_1)}{\log([A]_2/[A]_1)}$$
+\end{tip}
+
+\begin{resuelto}[]
+Para la reacción $2\ce{NO}(g) + \ce{O2}(g) \to 2\ce{NO2}(g)$, se obtuvieron los siguientes datos:
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+Experimento & $[\ce{NO}]_0$ (M) & $[\ce{O2}]_0$ (M) & $v_0$ (M/s) \\
+\midrule
+1 & 0.010 & 0.010 & $2.5\times10^{-5}$ \\
+2 & 0.020 & 0.010 & $1.0\times10^{-4}$ \\
+3 & 0.020 & 0.020 & $2.0\times10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Determina la ley de velocidad y la constante $k$.
+
+\paso{Orden respecto a NO (comparar exp. 1 y 2, donde solo cambia [NO])}
+$$\frac{v_2}{v_1} = \left(\frac{[\ce{NO}]_2}{[\ce{NO}]_1}\right)^m \ \Rightarrow\ \frac{1.0\times10^{-4}}{2.5\times10^{-5}} = \left(\frac{0.020}{0.010}\right)^m \ \Rightarrow\ 4 = 2^m \ \Rightarrow\ m=2$$
+
+\paso{Orden respecto a O2 (comparar exp. 2 y 3, donde solo cambia [O2])}
+$$\frac{v_3}{v_2} = \left(\frac{[\ce{O2}]_3}{[\ce{O2}]_2}\right)^n \ \Rightarrow\ \frac{2.0\times10^{-4}}{1.0\times10^{-4}} = \left(\frac{0.020}{0.010}\right)^n \ \Rightarrow\ 2 = 2^n \ \Rightarrow\ n=1$$
+
+\paso{Escribir la ley de velocidad}
+$$v = k[\ce{NO}]^2[\ce{O2}]^1 \qquad (\text{orden global} = 2+1 = 3)$$
+
+\paso{Calcular $k$ usando cualquier experimento (usamos el 1)}
+$$k = \frac{v_1}{[\ce{NO}]_1^2[\ce{O2}]_1} = \frac{2.5\times10^{-5}}{(0.010)^2(0.010)} = \SI{25}{M^{-2}s^{-1}}$$
+
+\idea{El truco de este método es comparar solo pares de experimentos donde \textbf{una sola concentración cambia a la vez}; así el cociente de velocidades aísla el efecto de esa única variable y puedes despejar su exponente.}
+\aplicacion{Este es probablemente el tipo de problema más frecuente del área de cinética en olimpiadas de química: identificar qué experimentos comparar es la mitad de la solución.}
+\end{resuelto}
+
+\subsection{Leyes de velocidad integradas}
+
+\begin{concepto}[]
+Las leyes de velocidad \textbf{integradas} muestran cómo cambia la concentración de un reactivo con el tiempo directamente (en vez de solo la velocidad instantánea), y permiten predecir concentraciones futuras o calcular vidas medias.
+\end{concepto}
+
+\begin{center}
+\begin{tabular}{cccc}
+\toprule
+\textbf{Orden} & \textbf{Ley integrada} & \textbf{Gráfica lineal} & \textbf{Vida media $t_{1/2}$} \\
+\midrule
+0 & $[A]=[A]_0-kt$ & $[A]$ vs. $t$ & $\dfrac{[A]_0}{2k}$ \\[6pt]
+1 & $\ln[A]=\ln[A]_0-kt$ & $\ln[A]$ vs. $t$ & $\dfrac{\ln 2}{k}$ \\[6pt]
+2 & $\dfrac{1}{[A]}=\dfrac{1}{[A]_0}+kt$ & $\dfrac{1}{[A]}$ vs. $t$ & $\dfrac{1}{k[A]_0}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=5.4cm, height=4.4cm,
+    xlabel={$t$}, ylabel={$[A]$}, axis lines=left,
+    xtick=\empty, ytick=\empty, title={\small Orden 0},
+]
+\addplot[fqAzul, thick, domain=0:3.5] {3.2-0.8*x};
+\end{axis}
+\end{tikzpicture}
+\hspace{0.2cm}
+\begin{tikzpicture}
+\begin{axis}[
+    width=5.4cm, height=4.4cm,
+    xlabel={$t$}, ylabel={$[A]$}, axis lines=left,
+    xtick=\empty, ytick=\empty, title={\small Orden 1},
+]
+\addplot[fqVerde, thick, domain=0:3.5, samples=60] {3.2*exp(-0.7*x)};
+\end{axis}
+\end{tikzpicture}
+\hspace{0.2cm}
+\begin{tikzpicture}
+\begin{axis}[
+    width=5.4cm, height=4.4cm,
+    xlabel={$t$}, ylabel={$[A]$}, axis lines=left,
+    xtick=\empty, ytick=\empty, title={\small Orden 2},
+]
+\addplot[fqNaranja, thick, domain=0:3.5, samples=60] {3.2/(1+0.9*x)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tip}[]
+Para identificar el orden de una reacción a partir de una tabla de datos $[A]$ vs. $t$ (sin que te digan el orden), grafica $[A]$, $\ln[A]$ y $1/[A]$ contra $t$: \textbf{la gráfica que salga una línea recta} te dice el orden de la reacción (0, 1 o 2 respectivamente). Es una estrategia experimental clásica en cinética.
+\end{tip}
+
+\begin{error}[]
+Confundir la constante de velocidad $k$ con la constante de equilibrio $K$: son conceptos completamente distintos. $k$ tiene unidades que dependen del orden de reacción (nunca es adimensional, salvo coincidencia numérica), mientras que $K$ (bajo la convención de actividades) es adimensional.
+\end{error}
+
+\seccionpractica
+
+\begin{propuesto}[]
+Una reacción de primer orden tiene $k = \SI{3.5e-3}{s^{-1}}$. Si $[A]_0 = \SI{0.500}{M}$, ¿cuál es $[A]$ después de $\SI{300}{s}$? ¿Cuál es la vida media de la reacción?
+
+\textit{Respuesta: $[A] = 0.500\,e^{-(3.5\times10^{-3})(300)} \approx \SI{0.175}{M}$; $t_{1/2}=\ln2/k \approx \SI{198}{s}$.}
+\end{propuesto}
+
+\begin{propuesto}[]
+Para la reacción $A \to \text{productos}$, duplicar $[A]_0$ cuadruplica la velocidad inicial. ¿Cuál es el orden de la reacción respecto a $A$?
+
+\textit{Respuesta: orden 2, porque $2^m=4 \Rightarrow m=2$.}
+\end{propuesto}
+
+\begin{resumen}[]
+\begin{itemize}
+    \item Velocidad de reacción: se define dividiendo cada $d[\,]/dt$ entre su coeficiente estequiométrico, con signo negativo para reactivos.
+    \item Ley de velocidad: $v=k[A]^m[B]^n$; los órdenes $m,n$ se determinan \textbf{experimentalmente}, no se leen de los coeficientes (salvo reacción elemental).
+    \item Método de velocidades iniciales: compara pares de experimentos donde solo cambia una concentración.
+    \item Leyes integradas y sus gráficas lineales permiten identificar el orden a partir de datos de concentración vs. tiempo.
+    \item Vidas medias: orden 0 depende de $[A]_0$; orden 1 es constante ($\ln2/k$); orden 2 depende de $1/[A]_0$.
+\end{itemize}
+\end{resumen}
+
+\backmatter
+
+% ======================================================================
+% BIBLIOGRAFÍA
+% ======================================================================
+
+\chapter*{Bibliografía}
+\addcontentsline{toc}{chapter}{Bibliografía}
+
+\begin{enumerate}[label={[\arabic*]}, leftmargin=2.3em, itemsep=8pt, topsep=4pt, itemindent=0pt]
+
+\item Atkins, P., \& de Paula, J. (2014). \textit{Physical Chemistry} (10.ª ed.). Oxford University Press.
+
+\item Chang, R., \& Goldsby, K. A. (2013). \textit{Química} (11.ª ed.). McGraw-Hill Interamericana.
+
+\item Levine, I. N. (2014). \textit{Physical Chemistry} (6.ª ed.). McGraw-Hill Education.
+
+\item Brown, T. L., LeMay, H. E., Bursten, B. E., Murphy, C. J., \& Woodward, P. M. (2014). \textit{Chemistry: The Central Science} (13.ª ed.). Pearson.
+
+\item Silbey, R. J., Alberty, R. A., \& Bawendi, M. G. (2005). \textit{Physical Chemistry} (4.ª ed.). John Wiley \& Sons.
+
+\item Petrucci, R. H., Herring, F. G., Madura, J. D., \& Bissonnette, C. (2011). \textit{General Chemistry: Principles and Modern Applications} (10.ª ed.). Pearson.
+
+\item Comité organizador de la International Chemistry Olympiad (IChO). \textit{Preparatory Problems} (ediciones diversas). \url{https://www.icho-official.org}
+
+\item Comité Organizador de la Olimpiada Hondureña de Química (OHQ). \textit{Programa temático y exámenes de años anteriores}.
+
+\item Levine, I. N. (2004). \textit{Fisicoquímica} (Vols. 1--2, 5.ª ed.). McGraw-Hill Interamericana.
+
+\item Engel, T., \& Reid, P. (2013). \textit{Physical Chemistry} (3.ª ed.). Pearson.
+
+\end{enumerate}
+
+\end{document}
